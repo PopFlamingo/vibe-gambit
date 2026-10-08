@@ -2,6 +2,9 @@
 
 Play chess on Lichess while Claude Code works. Vibe Gambit is a mod for [Claude Code](https://code.claude.com): a chessboard in a pane next to the conversation, or just a line under the prompt when you hide it, for live games on [Lichess](https://lichess.org).
 
+> [!NOTE]
+> Vibe Gambit is in beta and may still have bugs. If something goes wrong, please [open an issue](https://github.com/PopFlamingo/vibe-gambit/issues).
+
 ![A Lichess game in a pane beside a Claude Code conversation](docs/vibe-gambit.gif)
 
 ## Install
