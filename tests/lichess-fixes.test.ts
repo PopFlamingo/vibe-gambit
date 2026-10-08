@@ -1268,3 +1268,18 @@ test('the page the browser comes back to does not claim the sign-in worked: the 
     expect(page.connected).not.toMatch(/Connected|Connecté/)
   }
 })
+
+test('the line under the prompt always shows the last move, whoever played it, seen or not; none before the first', () => {
+  const t = stringsFor('en')
+  const at = (moves: string[]): ChessGame => ({
+    ...savedLichessGame(moves).game,
+    clock: { initialMs: 300_000, incrementMs: 0, whiteMs: 300_000, blackMs: 300_000, runningSince: null },
+  })
+  expect(hintLine(at([]), null, t, 'en', 0)).toBe('♔ 5:00  ♚ 5:00 · Your turn')
+  // The person (White) played: their move, Black to move.
+  expect(hintLine(at(['g1f3']), null, t, 'en', 0)).toBe('♔ 5:00  ♚ 5:00 · White ♞f3 · Black to move')
+  // The opponent's move, already seen (no alert): it stays.
+  expect(hintLine(at(['g1f3', 'd7d5']), null, t, 'en', 0)).toBe('♔ 5:00  ♚ 5:00 · Black ♟d5 · Your turn')
+  // Not seen yet: the same line, once.
+  expect(hintLine(at(['g1f3', 'd7d5']), { mover: 'b', san: 'd5' }, t, 'en', 0)).toBe('♔ 5:00  ♚ 5:00 · Black ♟d5 · Your turn')
+})

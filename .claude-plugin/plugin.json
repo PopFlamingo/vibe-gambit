@@ -35,7 +35,7 @@
     "hintWhenHidden": {
       "type": "boolean",
       "title": "Game line under the prompt",
-      "description": "While the board is hidden, show both clocks, the opponent's last move and whose turn it is at the end of the hint line under the prompt.",
+      "description": "While the board is hidden, show both clocks, the last move and whose turn it is at the end of the hint line under the prompt.",
       "default": true
     }
   }

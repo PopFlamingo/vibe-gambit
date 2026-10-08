@@ -1297,19 +1297,23 @@ async function startFromForm($: EngineInterface, setup: SetupForm, scope: Scope,
 // The hint line names the move in figurines, the same in every language.
 /**
  * The tail of the hint line under the prompt while the board is hidden, short since the row cuts
- * it: both clocks first (♔ White, ♚ Black), then the opponent's move, then whose turn it is.
+ * it: both clocks first (♔ White, ♚ Black), then the last move, whoever played it, then whose turn
+ * it is. Once the game is over, the opponent's move not seen yet, if any, and the result.
  */
 export function hintLine(current: ChessGame, pending: ChessAlert | null, t: Strings, locale: Locale, now: number) {
   const parts: string[] = []
   const clock = current.clock
-  const { position } = replay(current.moves)
+  const { position, sans } = replay(current.moves)
+  const side = (mover: 'w' | 'b') => (mover === 'w' ? t.white : t.black)
   // Both clocks while a game is on, even before they run (a Lichess game starts them after both first moves).
   if (clock && status(position) === 'playing' && isLichessOn(current)) {
     const left = (side: 'w' | 'b') => formatClock(timeLeft(clock, side, clockTurn(current), now))
     parts.push(`♔ ${left('w')}  ♚ ${left('b')}`)
-  }
-  if (pending) {
-    parts.push(`${pending.mover === 'w' ? t.white : t.black} ${figurine(pending.san)}`)
+    // The last move stays, seen or not: the board's last move, out of sight.
+    const last = sans.at(-1)
+    if (last) parts.push(`${side(sans.length % 2 === 1 ? 'w' : 'b')} ${figurine(last)}`)
+  } else if (pending) {
+    parts.push(`${side(pending.mover)} ${figurine(pending.san)}`)
   }
   // Then whose turn it is, or how the game ended.
   const result = lichessResult(current, t)

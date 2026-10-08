@@ -1,6 +1,6 @@
 # Vibe Gambit
 
-Play chess on Lichess while Claude Code works. Vibe Gambit is a mod for [Claude Code](https://code.claude.com): a chessboard in a pane next to the conversation, for live games on [Lichess](https://lichess.org).
+Play chess on Lichess while Claude Code works. Vibe Gambit is a mod for [Claude Code](https://code.claude.com): a chessboard in a pane next to the conversation, or just a line under the prompt when you hide it, for live games on [Lichess](https://lichess.org).
 
 ![A Lichess game in a pane beside a Claude Code conversation](docs/vibe-gambit.gif)
 
@@ -45,9 +45,9 @@ In `/config`, under Vibe Gambit:
 
 - **Language**: `auto` (Claude Code's language setting, then the system locale), `en` or `fr`.
 - **Game scope**: `global`, the same game in every Claude Code session, or `conversation`, one game per conversation.
-- **Game line under the prompt**: while the board is hidden, the end of the line under the prompt keeps the game in view: both clocks (♔ White, ♚ Black), the opponent's last move and whose turn it is. On by default.
+- **Game line under the prompt**: while the board is hidden, the end of the line under the prompt keeps the game in view: both clocks (♔ White, ♚ Black), the last move and whose turn it is. On by default.
 
-  ![The line under the prompt with both clocks and whose turn it is](docs/game-line.png)
+  ![The line under the prompt with both clocks, the last move and whose turn it is](docs/game-line.png)
 
 ## Lichess
 

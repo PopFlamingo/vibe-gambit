@@ -194,7 +194,7 @@ test('with the board hidden, the opponent’s move and both clocks show under th
   await runChess($, 'Cf3')
   await settle(w.clock)
   await hint.redraw()
-  expect(await tail()).toMatch(/^♔ \S+  ♚ \S+ · Trait aux Noirs$/)
+  expect(await tail()).toMatch(/^♔ \S+  ♚ \S+ · Blancs ♞f3 · Trait aux Noirs$/)
   await hint.unmount()
 })
 
@@ -271,7 +271,7 @@ test('the pane draws with an alert pending, and /chess takes the alert down', as
     component: 'PromptHint',
     props: { isDraft: false, isWorking: false, hint: '' },
   })
-  expect((await hint.find({ type: 'Text' }))?.text).toMatch(/^♔ \S+  ♚ \S+ · Your turn$/)
+  expect((await hint.find({ type: 'Text' }))?.text).toMatch(/^♔ \S+  ♚ \S+ · Black ♟e5 · Your turn$/)
   await pane.unmount()
   await hint.unmount()
 })
@@ -481,7 +481,7 @@ test('the line under the prompt shows a Lichess game before its clocks run', () 
     clock: { initialMs: 300_000, incrementMs: 3_000, whiteMs: 300_000, blackMs: 300_000, runningSince: null },
     lichess: { gameId: 'g', color: 'b', opponent: 'Stockfish 2', status: 'started' },
   }
-  expect(hintLine(current, null, stringsFor('en'), 'en', 0)).toBe('♔ 5:00  ♚ 5:00 · Your turn')
+  expect(hintLine(current, null, stringsFor('en'), 'en', 0)).toBe('♔ 5:00  ♚ 5:00 · White ♟e4 · Your turn')
   const over = { ...current, lichess: { ...current.lichess!, status: 'resign' } }
   expect(hintLine(over, null, stringsFor('en'), 'en', 0)).toBe(undefined)
 })
