@@ -1283,3 +1283,11 @@ test('the line under the prompt always shows the last move, whoever played it, s
   // Not seen yet: the same line, once.
   expect(hintLine(at(['g1f3', 'd7d5']), { mover: 'b', san: 'd5' }, t, 'en', 0)).toBe('♔ 5:00  ♚ 5:00 · Black ♟d5 · Your turn')
 })
+
+test('the New game screen names a random opponent plainly', async ($, on) => {
+  world(on)
+  await start($)
+  const ui = await $.ui.mount({ plugin: 'vibe-gambit', surface: 'terminal', ...PANE })
+  expect(await ui.find({ type: 'Button', key: 'opponent-random' })).toMatchObject({ text: expect.stringContaining('Random opponent') })
+  await ui.unmount()
+})

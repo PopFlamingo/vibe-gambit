@@ -55,7 +55,7 @@ const STRINGS = {
     cancel: 'Cancel',
     cancelled: 'Nothing changed.',
     newTitle: 'New game',
-    opponentNames: { stockfish: 'Stockfish', random: 'Random', friend: 'Friend' },
+    opponentNames: { stockfish: 'Stockfish', random: 'Random opponent', friend: 'Friend' },
     levelLabel: (level: number) => `Level ${level}`,
     timeLabel: (timeControl: string, speed: string) => `${timeControl} · ${speed}`,
     speeds: { bullet: 'bullet', blitz: 'blitz', rapid: 'rapid', classical: 'classical' },
