@@ -1,0 +1,42 @@
+{
+  "name": "vibe-gambit",
+  "displayName": "Vibe Gambit",
+  "version": "0.1.0",
+  "description": "Play chess on Lichess while Claude Code works: the board in a pane, live games against a random opponent, a friend or Stockfish hosted on Lichess.",
+  "author": {
+    "name": "Pop Flamingo"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/PopFlamingo/vibe-gambit",
+  "repository": "https://github.com/PopFlamingo/vibe-gambit",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "language": {
+      "type": "string",
+      "title": "Language",
+      "description": "auto follows Claude Code's language setting, then the system locale; English otherwise.",
+      "options": [
+        "auto",
+        "en",
+        "fr"
+      ],
+      "default": "auto"
+    },
+    "gameScope": {
+      "type": "string",
+      "title": "Game scope",
+      "description": "global: the same game in every Claude Code session. conversation: one game per conversation, found again when you resume it.",
+      "options": [
+        "global",
+        "conversation"
+      ],
+      "default": "global"
+    },
+    "hintWhenHidden": {
+      "type": "boolean",
+      "title": "Game line under the prompt",
+      "description": "While the board is hidden, show both clocks, the opponent's last move and whose turn it is at the end of the hint line under the prompt.",
+      "default": true
+    }
+  }
+}

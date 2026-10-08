@@ -1,0 +1,3 @@
+# Written by Claude Code at each load, for the build it runs.
+.claude-plugin/types/
+.DS_Store

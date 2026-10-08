@@ -1,0 +1,321 @@
+// The mod's text in English and French. English unless something says French.
+
+export type Locale = 'en' | 'fr'
+
+const STRINGS = {
+  en: {
+    commandDescription: 'Shows or hides the board; /chess new starts a game, /chess <move> plays (Nf3, e4, O-O)',
+    opened: 'Chessboard open: click a piece then its square, or drag it. /chess again to hide it.',
+    hidden: 'Chessboard hidden: /chess to resume the game.',
+    unavailable: 'The chessboard is not available here (terminal or desktop app only).',
+    paneTitle: 'Chess',
+    white: 'White',
+    black: 'Black',
+    noMoves: 'No moves yet.',
+    newGame: 'New game',
+    flip: 'Flip board',
+    toMove: (side: string) => `${side} to move`,
+    check: (side: string) => `Check! ${side} to move`,
+    yourTurn: 'Your turn',
+    yourTurnInCheck: 'Check! Your turn',
+    checkmate: (winner: string) => `Checkmate: ${winner} wins`,
+    stalemate: 'Stalemate: draw',
+    draw: 'Draw',
+    opponentMoved: (side: string, move: string) => `${side} ${move}, your move: /chess <move>`,
+    timeout: (winner: string) => `Time out: ${winner} wins`,
+    played: (san: string, then: string) => `Played ${san}. ${then}.`,
+    unknownMove: (text: string) => `“${text}” is not a legal move here. Write it like Nf3, e4, exd5, O-O or g1f3.`,
+    lichessOpened: (url: string) =>
+      `Your browser opens Lichess: authorize Vibe Gambit there, then come back here. If nothing opened: ${url}`,
+    lichessAlready: (user: string) => `Connected to Lichess as ${user}. /chess disconnect lichess to sign out.`,
+    lichessOpenThis: (url: string) =>
+      `Open this page to authorize Vibe Gambit on Lichess, then come back here: ${url}\nIf your browser is on another machine, it then lands on a page that does not load (http://127.0.0.1:53123/…): copy its address and type /chess connect <address>.`,
+    lichessNoHome: 'Lichess sign-in needs a home folder to keep the token, and HOME is not set.',
+    lichessPaste: (url: string) =>
+      `Open this page to authorize Vibe Gambit on Lichess: ${url}\nAfterwards your browser lands on a page that does not load (http://127.0.0.1:53123/…): copy its address and type /chess connect <address>.`,
+    lichessConnected: (user: string) => `Connected to Lichess as ${user}`,
+    oldTokenKept: 'The previous token could not be revoked: revoke it at https://lichess.org/account/security',
+    lichessFailed: (why: string) => `Lichess sign-in failed (${why}). /chess connect lichess to try again.`,
+    lichessDisconnected: 'Signed out of Lichess: the token is revoked and deleted.',
+    lichessNotConnected: 'Not connected to Lichess.',
+    lichessPage: {
+      lang: 'en',
+      title: 'Vibe Gambit',
+      connected: 'Back to your terminal',
+      connectedText: 'Vibe Gambit finishes signing in there and says when you are connected. Then start a game:',
+      quickStart: [
+        ['/chess lichess rapid', 'a 10+0 game against a random opponent'],
+        ['/chess lichess stockfish 3', 'a 5+3 game against Stockfish, level 3'],
+        ['/chess', 'every other kind of game, and the board'],
+      ],
+      cancelled: 'Sign-in cancelled',
+      cancelledText: 'Nothing was shared. To try again, type <code>/chess connect</code> in your terminal.',
+      close: 'You can close this tab.',
+    },
+    cancel: 'Cancel',
+    cancelled: 'Nothing changed.',
+    newTitle: 'New game',
+    opponentNames: { stockfish: 'Stockfish', random: 'Random', friend: 'Friend' },
+    levelLabel: (level: number) => `Level ${level}`,
+    timeLabel: (timeControl: string, speed: string) => `${timeControl} · ${speed}`,
+    speeds: { bullet: 'bullet', blitz: 'blitz', rapid: 'rapid', classical: 'classical' },
+    colorLabel: (color: string) => `Colour ${color}`,
+    colorNames: { random: 'random', white: 'White', black: 'Black' },
+    ratedLabel: (rated: boolean) => `Rated: ${rated ? 'yes' : 'no'}`,
+    friendLabel: 'Username: ',
+    friendPlaceholder: 'their Lichess name',
+    start: 'Start',
+    back: 'Back',
+    onLichess: 'On Lichess.',
+    notConnectedHint: 'Not connected to Lichess: /chess connect',
+    needFriend: 'Type your friend’s Lichess username first.',
+    searching: (timeControl: string) => `Looking for an opponent (${timeControl})…`,
+    challenging: (user: string, timeControl: string) => `Waiting for ${user} to accept (${timeControl})…`,
+    cancelSearch: 'Cancel the search',
+    searchCancelled: 'Search cancelled.',
+    noSearch: 'No search under way.',
+    searchEnded: 'No opponent found: the search ended.',
+    declined: (user: string) => `${user} declined the challenge.`,
+    challengeFailed: (why: string) => `The challenge could not be sent (${why}).`,
+    gameFound: (opponent: string, timeControl: string) => `Game on against ${opponent} (${timeControl}).`,
+    noGame: 'No game under way: /chess new to start one.',
+    offerDraw: 'Offer a draw',
+    drawOffered: 'Draw offered.',
+    drawOfferFrom: (name: string) => `${name} offers a draw`,
+    acceptDraw: 'Accept the draw',
+    declineDraw: 'Decline the draw',
+    noLichessGame: 'No Lichess game under way.',
+    onlyYou: 'On a Lichess game, only you play: type it yourself at the prompt, or play on the board.',
+    openOnLichess: 'Open on Lichess',
+    youResigned: 'You resigned.',
+    drawAccepted: 'Draw accepted.',
+    drawDeclined: 'Draw declined.',
+    takebackFrom: (name: string) => `${name} asks to take back their last move`,
+    acceptTakeback: 'Accept the takeback',
+    declineTakeback: 'Decline the takeback',
+    takebackAccepted: 'Takeback accepted.',
+    takebackDeclined: 'Takeback declined.',
+    noTakeback: 'No takeback asked of you.',
+    notTaken: (why: string) => `Lichess did not take it (${why}).`,
+    rateLimited: 'too many requests: Lichess asks to wait a minute',
+    signedOutLocally: 'Signed out here, but Lichess could not revoke the token: revoke it at https://lichess.org/account/security',
+    lichessUnreachable: 'Lichess cannot be reached to check your sign-in: try again in a moment.',
+    challengeCanceled: (user: string) => `The challenge to ${user} was canceled.`,
+    challengeLost: (user: string) => `The connection to Lichess dropped: your challenge to ${user} may still be open on lichess.org.`,
+    opponentLeft: (name: string, seconds: number) => `${name} left the game: you may claim the win or a draw in ${seconds} s`,
+    opponentLeftNow: (name: string) => `${name} left the game: you may claim the win or a draw`,
+    opponentLeftNoDelay: (name: string) => `${name} left the game`,
+    claimWin: 'Claim the win',
+    claimDraw: 'Claim a draw',
+    claimNotYet: (seconds: number) => `Not yet: you may claim in ${seconds} s.`,
+    nothingToClaim: 'Your opponent has not left: nothing to claim.',
+    winClaimed: 'Win claimed.',
+    drawClaimed: 'Draw claimed.',
+    cannotFollow: 'This game cannot be followed here: sign in again with /chess connect. It goes on on Lichess.',
+    signedOutDuringGame: (url: string) => `Signed out of Lichess. Your game goes on at ${url}`,
+    otherGameOn: (url: string) => `A game is already on here: the new one waits for you at ${url}`,
+    cannotReadGames: 'Lichess cannot list your games right now: try again in a moment.',
+    searchLost: 'Paired, but Lichess does not list the game yet: look on lichess.org.',
+    opening: (url: string) => `Opening ${url}`,
+    openYourself: (url: string) => `Open it in your browser: ${url}`,
+    needLichess: 'Connect to Lichess first: /chess connect lichess',
+    aiStarted: (level: number, timeControl: string) => `Game started on Lichess against Stockfish level ${level} (${timeControl}).`,
+    aiFailed: (why: string) => `Lichess could not start the game (${why}).`,
+    moveRefused: (why: string) => `Lichess refused the move (${why}).`,
+    notYourTurn: 'Not your turn.',
+    lichessGameOn: 'A Lichess game is on: finish it or resign first.',
+    you: 'You',
+    stockfish: (level: number) => `Stockfish ${level}`,
+    unconfirmed: (san: string) => `⏳ Lichess has not confirmed ${san} yet…`,
+    notPlayed: (san: string, why: string) => `✕ ${san} not played: ${why}`,
+    noAnswer: 'no answer from Lichess',
+    resign: 'Resign',
+    abort: 'Abort game',
+    confirmResign: 'Resign? r again to confirm',
+    confirmAbort: 'Abort? r again to confirm',
+    resigned: (side: string) => `${side} resigned`,
+    aborted: 'Game aborted',
+    wins: (side: string) => `${side} wins`,
+    gameOver: 'Game over',
+  },
+  fr: {
+    commandDescription: 'Affiche ou masque l’échiquier ; /chess new lance une partie, /chess <coup> joue (Cf3, e4, O-O)',
+    opened: 'Échiquier ouvert : cliquez une pièce puis sa case, ou glissez-la. /chess à nouveau pour le masquer.',
+    hidden: 'Échiquier masqué : /chess pour reprendre la partie.',
+    unavailable: 'L’échiquier n’est pas disponible ici (terminal ou app de bureau seulement).',
+    paneTitle: 'Échecs',
+    white: 'Blancs',
+    black: 'Noirs',
+    noMoves: 'Aucun coup joué.',
+    newGame: 'Nouvelle partie',
+    flip: 'Retourner',
+    toMove: (side: string) => `Trait aux ${side}`,
+    check: (side: string) => `Échec ! Trait aux ${side}`,
+    yourTurn: 'À vous de jouer',
+    yourTurnInCheck: 'Échec ! À vous de jouer',
+    checkmate: (winner: string) => `Échec et mat : les ${winner} gagnent`,
+    stalemate: 'Pat : partie nulle',
+    draw: 'Partie nulle',
+    opponentMoved: (side: string, move: string) => `${side} ${move}, à vous : /chess <coup>`,
+    timeout: (winner: string) => `Temps écoulé : les ${winner} gagnent`,
+    played: (san: string, then: string) => `Joué ${san}. ${then}.`,
+    unknownMove: (text: string) => `« ${text} » n’est pas un coup légal ici. Écrivez-le comme Cf3, e4, exd5, O-O ou g1f3.`,
+    lichessOpened: (url: string) =>
+      `Votre navigateur ouvre Lichess : autorisez Vibe Gambit, puis revenez ici. Si rien ne s’est ouvert : ${url}`,
+    lichessAlready: (user: string) => `Connecté à Lichess en tant que ${user}. /chess disconnect lichess pour vous déconnecter.`,
+    lichessOpenThis: (url: string) =>
+      `Ouvrez cette page pour autoriser Vibe Gambit sur Lichess, puis revenez ici : ${url}\nSi votre navigateur est sur une autre machine, il arrive ensuite sur une page qui ne se charge pas (http://127.0.0.1:53123/…) : copiez son adresse et tapez /chess connect <adresse>.`,
+    lichessNoHome: 'La connexion à Lichess a besoin d’un dossier personnel pour garder le jeton, et HOME n’est pas défini.',
+    lichessPaste: (url: string) =>
+      `Ouvrez cette page pour autoriser Vibe Gambit sur Lichess : ${url}\nVotre navigateur arrive ensuite sur une page qui ne se charge pas (http://127.0.0.1:53123/…) : copiez son adresse et tapez /chess connect <adresse>.`,
+    lichessConnected: (user: string) => `Connecté à Lichess en tant que ${user}`,
+    oldTokenKept: 'L’ancien jeton n’a pas pu être révoqué : révoquez-le sur https://lichess.org/account/security',
+    lichessFailed: (why: string) => `Connexion à Lichess échouée (${why}). /chess connect lichess pour réessayer.`,
+    lichessDisconnected: 'Déconnecté de Lichess : le jeton est révoqué et supprimé.',
+    lichessNotConnected: 'Pas connecté à Lichess.',
+    lichessPage: {
+      lang: 'fr',
+      title: 'Vibe Gambit',
+      connected: 'Retour au terminal',
+      connectedText: 'Vibe Gambit y termine la connexion et vous dit quand c’est fait. Lancez ensuite une partie :',
+      quickStart: [
+        ['/chess lichess rapid', 'une partie en 10+0 contre un adversaire au hasard'],
+        ['/chess lichess stockfish 3', 'une partie en 5+3 contre Stockfish, niveau 3'],
+        ['/chess', 'tous les autres types de partie, et l’échiquier'],
+      ],
+      cancelled: 'Connexion annulée',
+      cancelledText:
+        'Rien n’a été partagé. Pour réessayer, tapez <code>/chess connect</code> dans votre terminal.',
+      close: 'Vous pouvez fermer cet onglet.',
+    },
+    cancel: 'Annuler',
+    cancelled: 'Rien n’a changé.',
+    newTitle: 'Nouvelle partie',
+    opponentNames: { stockfish: 'Stockfish', random: 'Au hasard', friend: 'Un ami' },
+    levelLabel: (level: number) => `Niveau ${level}`,
+    timeLabel: (timeControl: string, speed: string) => `${timeControl} · ${speed}`,
+    speeds: { bullet: 'bullet', blitz: 'blitz', rapid: 'rapide', classical: 'classique' },
+    colorLabel: (color: string) => `Couleur ${color}`,
+    colorNames: { random: 'au hasard', white: 'Blancs', black: 'Noirs' },
+    ratedLabel: (rated: boolean) => `Classée : ${rated ? 'oui' : 'non'}`,
+    friendLabel: 'Pseudo : ',
+    friendPlaceholder: 'son nom Lichess',
+    start: 'Lancer',
+    back: 'Retour',
+    onLichess: 'Sur Lichess.',
+    notConnectedHint: 'Pas connecté à Lichess : /chess connect',
+    needFriend: 'Indiquez d’abord le pseudo Lichess de votre ami.',
+    searching: (timeControl: string) => `Recherche d’un adversaire (${timeControl})…`,
+    challenging: (user: string, timeControl: string) => `En attente de ${user} (${timeControl})…`,
+    cancelSearch: 'Annuler la recherche',
+    searchCancelled: 'Recherche annulée.',
+    noSearch: 'Aucune recherche en cours.',
+    searchEnded: 'Aucun adversaire trouvé : la recherche s’est terminée.',
+    declined: (user: string) => `${user} a refusé le défi.`,
+    challengeFailed: (why: string) => `Le défi n’a pas pu être envoyé (${why}).`,
+    gameFound: (opponent: string, timeControl: string) => `Partie lancée contre ${opponent} (${timeControl}).`,
+    noGame: 'Aucune partie en cours : /chess new pour en lancer une.',
+    offerDraw: 'Proposer nulle',
+    drawOffered: 'Nulle proposée.',
+    drawOfferFrom: (name: string) => `${name} propose nulle`,
+    acceptDraw: 'Accepter la nulle',
+    declineDraw: 'Refuser la nulle',
+    noLichessGame: 'Aucune partie Lichess en cours.',
+    onlyYou: 'Sur une partie Lichess, vous seul jouez : tapez-le vous-même au prompt, ou jouez sur l’échiquier.',
+    openOnLichess: 'Ouvrir sur Lichess',
+    youResigned: 'Vous avez abandonné.',
+    drawAccepted: 'Nulle acceptée.',
+    drawDeclined: 'Nulle refusée.',
+    takebackFrom: (name: string) => `${name} demande à reprendre son dernier coup`,
+    acceptTakeback: 'Accepter la reprise',
+    declineTakeback: 'Refuser la reprise',
+    takebackAccepted: 'Reprise acceptée.',
+    takebackDeclined: 'Reprise refusée.',
+    noTakeback: 'Aucune reprise ne vous est demandée.',
+    notTaken: (why: string) => `Lichess ne l’a pas pris en compte (${why}).`,
+    rateLimited: 'trop de requêtes : Lichess demande d’attendre une minute',
+    signedOutLocally: 'Déconnecté ici, mais Lichess n’a pas pu révoquer le jeton : révoquez-le sur https://lichess.org/account/security',
+    lichessUnreachable: 'Lichess est injoignable pour vérifier votre connexion : réessayez dans un moment.',
+    challengeCanceled: (user: string) => `Le défi à ${user} a été annulé.`,
+    challengeLost: (user: string) => `La connexion à Lichess a été coupée : votre défi à ${user} est peut-être encore ouvert sur lichess.org.`,
+    opponentLeft: (name: string, seconds: number) => `${name} a quitté la partie : vous pourrez réclamer la victoire ou la nulle dans ${seconds} s`,
+    opponentLeftNow: (name: string) => `${name} a quitté la partie : vous pouvez réclamer la victoire ou la nulle`,
+    opponentLeftNoDelay: (name: string) => `${name} a quitté la partie`,
+    claimWin: 'Réclamer la victoire',
+    claimDraw: 'Réclamer la nulle',
+    claimNotYet: (seconds: number) => `Pas encore : vous pourrez réclamer dans ${seconds} s.`,
+    nothingToClaim: 'Votre adversaire n’est pas parti : rien à réclamer.',
+    winClaimed: 'Victoire réclamée.',
+    drawClaimed: 'Nulle réclamée.',
+    cannotFollow: 'Cette partie ne peut pas être suivie ici : reconnectez-vous avec /chess connect. Elle continue sur Lichess.',
+    signedOutDuringGame: (url: string) => `Déconnecté de Lichess. Votre partie continue sur ${url}`,
+    otherGameOn: (url: string) => `Une partie est déjà en cours ici : la nouvelle vous attend sur ${url}`,
+    cannotReadGames: 'Lichess ne peut pas lister vos parties pour l’instant : réessayez dans un moment.',
+    searchLost: 'Adversaire trouvé, mais Lichess ne liste pas encore la partie : regardez sur lichess.org.',
+    opening: (url: string) => `Ouverture de ${url}`,
+    openYourself: (url: string) => `Ouvrez-la dans votre navigateur : ${url}`,
+    needLichess: 'Connectez-vous d’abord à Lichess : /chess connect lichess',
+    aiStarted: (level: number, timeControl: string) => `Partie lancée sur Lichess contre Stockfish niveau ${level} (${timeControl}).`,
+    aiFailed: (why: string) => `Lichess n’a pas pu lancer la partie (${why}).`,
+    moveRefused: (why: string) => `Lichess a refusé le coup (${why}).`,
+    notYourTurn: 'Ce n’est pas à vous de jouer.',
+    lichessGameOn: 'Une partie Lichess est en cours : terminez-la ou abandonnez d’abord.',
+    you: 'Vous',
+    stockfish: (level: number) => `Stockfish ${level}`,
+    unconfirmed: (san: string) => `⏳ Lichess n’a pas encore confirmé ${san}…`,
+    notPlayed: (san: string, why: string) => `✕ ${san} non joué : ${why}`,
+    noAnswer: 'pas de réponse de Lichess',
+    resign: 'Abandonner',
+    abort: 'Annuler la partie',
+    confirmResign: 'Abandonner ? r de nouveau pour confirmer',
+    confirmAbort: 'Annuler ? r de nouveau pour confirmer',
+    resigned: (side: string) => `Les ${side} abandonnent`,
+    aborted: 'Partie annulée',
+    wins: (side: string) => `Les ${side} gagnent`,
+    gameOver: 'Partie terminée',
+  },
+} as const
+
+export type Strings = (typeof STRINGS)[Locale]
+
+export const stringsFor = (locale: Locale): Strings => STRINGS[locale]
+
+/**
+ * The first hint that names a language decides: the mod's own option, then Claude Code's
+ * `language` setting ("french", "français", "fr"...), then the locale variables. English otherwise.
+ */
+export function pickLocale(hints: readonly (string | undefined)[]): Locale {
+  for (const hint of hints) {
+    const value = hint?.trim().toLowerCase()
+    if (!value || value === 'auto' || value === 'c' || value === 'posix') continue
+    return /^(fr|fran[cç])/.test(value) ? 'fr' : 'en'
+  }
+  return 'en'
+}
+
+const FRENCH_PIECES: Record<string, string> = { K: 'R', Q: 'D', R: 'T', B: 'F', N: 'C' }
+
+/** SAN with the piece letters of the locale: Nf3 is Cf3 in French, e8=Q is e8=D. */
+export function localSan(san: string, locale: Locale): string {
+  if (locale === 'en') return san
+  return san.replace(/^[KQRBN]|=[QRBN]/, match => match.replace(/[KQRBN]/, letter => FRENCH_PIECES[letter]!))
+}
+
+const ENGLISH_PIECES: Record<string, string> = { R: 'K', D: 'Q', T: 'R', F: 'B', C: 'N' }
+
+/** A typed move made comparable: no check marks, captures or annotations, castling with letters. */
+export function normalizeMove(text: string, locale: Locale): string {
+  let move = text.trim().replace(/[+#!?]/g, '').replace(/x|:/g, '').replace(/0/g, 'O')
+  // French piece letters to English ones, where the letter leads or follows "=".
+  if (locale === 'fr') move = move.replace(/^[RDTFC]|=[DTFC]/, m => m.replace(/[RDTFC]/, l => ENGLISH_PIECES[l]!))
+  return move.replace(/=/, '')
+}
+
+const FIGURINES: Record<string, string> = { K: '♚', Q: '♛', R: '♜', B: '♝', N: '♞' }
+
+/** SAN with the piece drawn rather than lettered, the same in every language: ♞f6, ♟h6, ♟e8=♛, O-O. */
+export function figurine(san: string): string {
+  if (san.startsWith('O')) return san
+  const withPiece = FIGURINES[san[0]!] ? FIGURINES[san[0]!] + san.slice(1) : `♟${san}`
+  return withPiece.replace(/=([QRBN])/, (_, letter: string) => `=${FIGURINES[letter]}`)
+}
