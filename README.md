@@ -56,7 +56,7 @@ In `/config`, under Vibe Gambit:
 
 `/chess connect` signs you in with OAuth (PKCE): your browser opens Lichess's consent page, you approve, and Lichess sends the browser back to a one-shot listener on `127.0.0.1:53123`. Vibe Gambit asks for one permission, `board:play`, which lets it play your games through Lichess's [Board API](https://lichess.org/api#tag/Board).
 
-Lichess's Board API allows rapid and classical games against a random opponent. Blitz is possible against a friend or Stockfish hosted on Lichess. Correspondence games are not supported.
+Lichess's Board API allows rapid and classical games against a random opponent. Blitz is possible against a friend or Stockfish hosted on Lichess. Correspondence games aren't supported yet, but may be soon: if you would like them, please say so in an [issue](https://github.com/PopFlamingo/vibe-gambit/issues).
 
 ## Your Lichess token and files
 
