@@ -1,7 +1,7 @@
 {
   "name": "vibe-gambit",
   "displayName": "Vibe Gambit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Play chess on Lichess while Claude Code works: the board in a pane, live games against a random opponent, a friend or Stockfish hosted on Lichess.",
   "author": {
     "name": "Pop Flamingo"
