@@ -274,7 +274,10 @@ export function applyLichessEvent<G extends { moves: string[]; flipped: boolean;
   // An opponent who moves again, or a game over, is no longer gone.
   const isStill = status === 'started' && moves.length <= current.moves.length
   const opponentGone = isStill ? lichess.opponentGone : undefined
-  return { ...current, moves, clock, pending, lichess: { ...lichess, status, winner: state.winner ?? lichess.winner, drawOffer, takebackOffer, opponentGone } }
+  // Over: timed once, when first found over (a reconnection's gameFull keeps the time it had).
+  const earlier = current.lichess?.gameId === lichess.gameId ? current.lichess.endedAt : undefined
+  const endedAt = status === 'started' ? undefined : (lichess.endedAt ?? earlier ?? now)
+  return { ...current, moves, clock, pending, lichess: { ...lichess, status, winner: state.winner ?? lichess.winner, drawOffer, takebackOffer, opponentGone, endedAt } }
 }
 
 

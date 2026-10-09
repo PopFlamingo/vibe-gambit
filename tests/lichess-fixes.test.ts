@@ -685,7 +685,8 @@ test('#14 an end Lichess does not explain is no draw', () => {
 
 test('#22 the line under the prompt gives the result once the game is over, not “Your turn”', () => {
   const t = stringsFor('en')
-  const line = hintLine(ended('resign', 'black'), { mover: 'b', san: 'e5' }, t, 'en', 0)
+  const over = ended('resign', 'black')
+  const line = hintLine({ ...over, lichess: { ...over.lichess!, endedAt: 0 } }, { mover: 'b', san: 'e5' }, t, 'en', 0)
   expect(line).toContain('White resigned')
   expect(line).not.toContain('Your turn')
 })
@@ -1290,4 +1291,31 @@ test('the New game screen names a random opponent plainly', async ($, on) => {
   const ui = await $.ui.mount({ plugin: 'vibe-gambit', surface: 'terminal', ...PANE })
   expect(await ui.find({ type: 'Button', key: 'opponent-random' })).toMatchObject({ text: expect.stringContaining('Random opponent') })
   await ui.unmount()
+})
+
+test('once a game is over, the line under the prompt gives the result for 10 seconds, then nothing', () => {
+  const t = stringsFor('en')
+  const over = ended('resign', 'black')
+  const at = { ...over, lichess: { ...over.lichess!, endedAt: 1_000 } }
+  expect(hintLine(at, null, t, 'en', 5_000)).toBe('Black ♟e5 · White resigned')
+  expect(hintLine(at, { mover: 'b', san: 'e5' }, t, 'en', 5_000)).toBe('Black ♟e5 · White resigned')
+  expect(hintLine(at, { mover: 'b', san: 'e5' }, t, 'en', 11_001)).toBe(undefined)
+  // A game that ended before this version kept no time: nothing to show.
+  expect(hintLine(over, { mover: 'b', san: 'e5' }, t, 'en', 5_000)).toBe(undefined)
+})
+
+test('the end of a game is timed when Lichess says it is over, not again afterwards', () => {
+  const playing = savedLichessGame(['e2e4', 'e7e5']).game
+  const resigned = applyLichessEvent(playing, JSON.parse(gameState('e2e4 e7e5', { status: 'resign', winner: 'black' })), 12_000, 'PopFlamingo', ai)
+  expect(resigned.lichess?.endedAt).toBe(12_000)
+  const later = applyLichessEvent(resigned, JSON.parse(gameState('e2e4 e7e5', { status: 'resign', winner: 'black' })), 30_000, 'PopFlamingo', ai)
+  expect(later.lichess?.endedAt).toBe(12_000)
+})
+
+test('a game that ends here (unknown to Lichess) is timed too', async ($, on) => {
+  const w = world(on, { saved: savedLichessGame([]) })
+  w.route('GET', /\/game\/export\/g1/, { status: 404, text: '' })
+  ;(await following(w, $)).end(404)
+  await settle(w.clock, 1500)
+  expect(w.saved().game.lichess?.endedAt).toEqual(expect.any(Number))
 })

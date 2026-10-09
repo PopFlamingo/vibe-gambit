@@ -693,7 +693,14 @@ async function followLichessGame($: EngineInterface, gameId: string, scope: Scop
 
 /** Changes the board's Lichess game, if it is still `gameId`, and tells the other sessions. */
 async function changeLichessGame($: EngineInterface, gameId: string, scope: Scope, change: (lichess: NonNullable<ChessGame['lichess']>) => NonNullable<ChessGame['lichess']>) {
-  await update($, game, current => (current.lichess?.gameId === gameId ? { ...current, lichess: change(current.lichess), pending: undefined } : current))
+  const now = await $.clock.now()
+  await update($, game, current => {
+    if (current.lichess?.gameId !== gameId) return current
+    const changed = change(current.lichess)
+    // Found over here: timed, for the line under the prompt.
+    const endedAt = changed.status === 'started' ? undefined : (changed.endedAt ?? now)
+    return { ...current, lichess: { ...changed, endedAt }, pending: undefined }
+  })
   await saveGame($, scope)
 }
 
@@ -1295,10 +1302,13 @@ async function startFromForm($: EngineInterface, setup: SetupForm, scope: Scope,
 }
 
 // The hint line names the move in figurines, the same in every language.
+/** How long, once a game is over, the line under the prompt still gives its result. */
+export const RESULT_SHOWN_MS = 10_000
+
 /**
  * The tail of the hint line under the prompt while the board is hidden, short since the row cuts
  * it: both clocks first (♔ White, ♚ Black), then the last move, whoever played it, then whose turn
- * it is. Once the game is over, the opponent's move not seen yet, if any, and the result.
+ * it is. Once the game is over: the last move and the result, for RESULT_SHOWN_MS, then nothing.
  */
 export function hintLine(current: ChessGame, pending: ChessAlert | null, t: Strings, locale: Locale, now: number) {
   const parts: string[] = []
@@ -1312,6 +1322,14 @@ export function hintLine(current: ChessGame, pending: ChessAlert | null, t: Stri
     // The last move stays, seen or not: the board's last move, out of sight.
     const last = sans.at(-1)
     if (last) parts.push(`${side(sans.length % 2 === 1 ? 'w' : 'b')} ${figurine(last)}`)
+  } else if (current.lichess && current.lichess.status !== 'started') {
+    // Over: the result for a while, then the line is the prompt's own again.
+    const endedAt = current.lichess.endedAt
+    if (endedAt === undefined || now - endedAt > RESULT_SHOWN_MS) return undefined
+    const last = sans.at(-1)
+    if (last) parts.push(`${side(sans.length % 2 === 1 ? 'w' : 'b')} ${figurine(last)}`)
+    parts.push(lichessResult(current, t) ?? statusLine(position, t, yourSide(current)))
+    return parts.join(' · ')
   } else if (pending) {
     parts.push(`${side(pending.mover)} ${figurine(pending.san)}`)
   }
@@ -1346,9 +1364,12 @@ export const register: Register = (on, options) => {
       inBackground(
         adoptSaved($, scope)
         .then(() => read($, game))
-        .then(current => {
-          // Running clocks tick; a move waiting for Lichess says so after a while.
-          if (current.clock?.runningSince != null || current.pending || current.lichess?.opponentGone) $.ui.invalidate('ui.render')
+        .then(async current => {
+          // Running clocks tick; a move waiting for Lichess says so after a while; a game just over
+          // redraws until its result has left the line under the prompt.
+          const endedAt = current.lichess?.endedAt
+          const isEnding = endedAt !== undefined && (await $.clock.now()) - endedAt <= RESULT_SHOWN_MS + 1000
+          if (current.clock?.runningSince != null || current.pending || current.lichess?.opponentGone || isEnding) $.ui.invalidate('ui.render')
           if (current.lichess?.status === 'started') inBackground(followLichessGame($, current.lichess.gameId, scope, t))
           for (const gameId of following) inBackground(holdLease($, gameId))
         }),

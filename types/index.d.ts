@@ -43,6 +43,8 @@ export type LichessGame = {
   opponentGone?: { claimAt: number | null }
   /** Why this session cannot follow the game (no token, a token Lichess refuses): it goes on on Lichess. */
   unreachable?: string
+  /** When the game was found over (ms): the line under the prompt gives the result for a while. */
+  endedAt?: number
 }
 
 /** The New game screen's choices. */
